@@ -5,7 +5,8 @@
 
 * * * 
 1. Clone the Repo to local directory of your choice
-  -command: ```$ git clone repo```
+  
+  - command: ```$ git clone repo```
 * * * 
 2. create a python virtual environment for this project (make sure it is in a seperate directory from the actual project code)
    - command: ```$ python3 -m venv /some_path/your-environment-dir```
