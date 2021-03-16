@@ -12,22 +12,22 @@
 * * * 
 3. startup virtual environment 
 
-  - command:  ```$ cd /your-environment-dir```
+    - command:  ```$ cd /your-environment-dir```
 
-  - command: ```$ source bin/activate ```
+    - command: ```$ source bin/activate ```
 * * * 
 4. navigate to project directory and install dependencies
 
-  - command:  ```$ pip3 install -r requirenments.txt```
+     - command:  ```$ pip3 install -r requirenments.txt```
 * * * 
 4. get copy of ```env``` from slack and rename to ```.env```
 
- - command:  ```$ mv env .env ```
+    - command:  ```$ mv env .env ```
    
 * * *   
 5. set environment variables 
-   - command: ```export FLASK_APP=app.py```
+    - command: ```export FLASK_APP=app.py```
 * * * 
 6. run app from local directory 
-   - command: ```flask run```
+    - command: ```flask run```
 * * * 
