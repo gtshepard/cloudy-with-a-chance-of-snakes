@@ -1,46 +1,15 @@
-from flask import Flask,render_template
+from flask import Flask,render_template, request
 import requests 
 import plotly.graph_objects as go
-from os import environ, path
-from dotenv import load_dotenv
+from os import environ
 from collections import defaultdict
+from utils import api
+import json
 
 API_KEY = environ.get('API_KEY')
 BASE_URL = f'https://api.openweathermap.org/data/2.5/'
 
-#import geocoder
-#g = geocoder.ip('me')
-#print(g.latlng)
-
-
 app = Flask(__name__)
-
-@app.route("/")
-def hello():
-    '''
-    response = get_weather_by_location('42.54149775840134','-75.01959026744706' )
-    t_mins = []
-    dates = []
-    t_maxs = []
-    for item in response['list']:
-        #t_min, t_max, date = response['list'][1]['main']['temp_min'],response['list'][1]['main']['temp_max'], response['list'][1]['dt_txt']
-        t_min = item['main']['temp_min']
-        date = item['dt_txt']
-        t_max = item['main']['temp_max']
-        t_mins.append(float(t_min))
-        dates.append(date)
-        t_maxs.append(float(t_max))
-    '''
-        
-    make_city_weather_plot()
-    return render_template('new_plot.html')
-
-@app.route("/data")
-def see_data():
-    #response = get_weather_by_location('42.54149775840134','-75.01959026744706' )
-    #print(response['list'][0][''])
-    response = get_weather_for_city('los angeles')
-    return response
 
 def get_weather_by_location(lat, lon):
     location_search = f'weather?lat={lat}&lon={lon}&appid={API_KEY}'
@@ -74,10 +43,10 @@ def make_city_weather_plot():
     layout = {'xaxis': {'title': '5 Day Span', 
                         'visible': True, 
                         'showticklabels': False}, 
-              'yaxis': {'title': 'Degrees Fahrenheit', 
+            'yaxis': {'title': 'Degrees Fahrenheit', 
                         'visible': True, 
                         'showticklabels': True}
-              })
+            })
 
 
     dates = set()
@@ -143,3 +112,24 @@ def make_city_weather_plot():
         f.write(template.format(fig_json))
 
     return template
+def main():
+    plot = api.make_plot_cities(['New York', 'Boston', 'San Francisco'], "temp_min") 
+    return render_template('index.html', plotly_data=plot)
+
+@app.route("/data")
+def data():
+    response = api.get_forecast_by_city('los angeles')
+    return response
+
+@app.route("/location")
+def location():
+    city = request.args.get('city')
+    response = api.get_weather_by_location(city)
+    return response
+
+@app.route('/graph', methods=['POST'])
+def graph():
+    data = json.loads(request.get_data())
+    option, cities = data['option'], list(data['cities'])
+    graph = api.make_plot_cities(cities, option)
+    return graph
