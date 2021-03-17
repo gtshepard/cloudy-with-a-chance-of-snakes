@@ -149,21 +149,6 @@
             let formData = {};
             formData["option"] = id
             formData["cities"] = [...cities]
-            
-            try{
-                const response = await fetch("http://127.0.0.1:5000/graph", {
-                    method: "POST",
-                    body: JSON.stringify(formData)
-                })
-                if (response.ok){
-                    const graph = await response.json()
-                    Plotly.newPlot('divPlotly', graph.data, graph.layout)
-                }else{
-                    throw new Error("Failed to fetch")
-                }
-            }catch(error){
-                console.log('Failed to fetch ' + error)   
-            }
         }
     </script>
 

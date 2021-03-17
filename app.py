@@ -27,11 +27,3 @@ def location():
     city = request.args.get('city')
     response = api.get_weather_by_location(city)
     return response
-
-@app.route('/graph', methods=['POST'])
-def graph():
-    data = json.loads(request.get_data())
-    option, cities = data['option'], list(data['cities'])
-    print(cities)
-    graph = api.make_plot_cities(cities)
-    return graph
