@@ -19,12 +19,14 @@ def hello():
     make_city_weather_plot()
     return render_template('new_plot.html')
 
+'''
 @app.route("/data")
 def see_data():
     #response = get_weather_by_location('42.54149775840134','-75.01959026744706' )
     #print(response['list'][0][''])
     response = get_weather_for_city('los angeles')
     return response
+'''
 '''
 def get_weather_by_location(lat, lon):
     location_search = f'weather?lat={lat}&lon={lon}&appid={API_KEY}'
@@ -153,6 +155,8 @@ def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los 
         </script>
     </body>
     </html>"""
+
+
     # write the JSON to the HTML template
     with open('templates/new_plot.html', 'w') as f:
         f.write(template.format(fig_json))
