@@ -79,6 +79,8 @@ def make_plot_3():
                         'visible': True, 
                         'showticklabels': True}
               })
+
+
     dates = set()
     for city in data:
         name = city['city']['name'].lower()
@@ -91,13 +93,13 @@ def make_plot_3():
 
 
     for city in cities:
-        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_temp[city], mode='lines', name=f'{city}-t'))
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_temp[city], mode='lines', name=city))
 
     for city in cities:
-        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_humidity[city], mode='lines', name=f'{city}-h', visible=False))
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_humidity[city], mode='lines', name=city, visible=False))
     
     for city in cities:
-        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_feels[city], mode='lines', name=f'{city}-f', visible=False))
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_feels[city], mode='lines', name=city, visible=False))
 
 
     fig.update_layout(
