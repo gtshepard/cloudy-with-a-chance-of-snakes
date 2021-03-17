@@ -68,6 +68,17 @@ def make_plot_3():
     cities = ['new york', 'london','miami', 'dubai', 'los angeles']
     data = get_weather_for_cities(cities)
     city_to_temp = defaultdict(list)
+    city_to_humidity = defaultdict(list)
+    city_to_feels = defaultdict(list)
+
+    fig = go.Figure(layout_title_text="Max Temp", 
+    layout = {'xaxis': {'title': '5 Day Span', 
+                        'visible': True, 
+                        'showticklabels': False}, 
+              'yaxis': {'title': 'Degrees Fahrenheit', 
+                        'visible': True, 
+                        'showticklabels': True}
+              })
     dates = set()
     for city in data:
         name = city['city']['name'].lower()
@@ -75,22 +86,89 @@ def make_plot_3():
             dates.add(time_interval['dt_txt'])
             print(time_interval['main']['temp_max'])
             city_to_temp[name].append(time_interval['main']['temp_max'])
+            city_to_humidity[name].append(time_interval['main']['humidity'])
+            city_to_feels[name].append(time_interval['main']['feels_like'])
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=[i for i in range(40)], y=city_to_temp[cities[0]], mode='lines', name=cities[0]))
-    fig.add_trace(go.Scatter(x=[i for i in range(40)], y=city_to_temp[cities[1]], mode='lines', name=cities[1]))
-    fig.add_trace(go.Scatter(x=[i for i in range(40)], y=city_to_temp[cities[2]], mode='lines', name=cities[2]))
-    fig.add_trace(go.Scatter(x=[i for i in range(40)], y=city_to_temp[cities[3]], mode='lines', name=cities[3]))
-    fig.add_trace(go.Scatter(x=[i for i in range(40)], y=city_to_temp[cities[4]], mode='lines', name=cities[4]))
-    fig_json = fig.to_json()
+
+    for city in cities:
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_temp[city], mode='lines', name=f'{city}-t'))
+
+    for city in cities:
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_humidity[city], mode='lines', name=f'{city}-h', visible=False))
     
+    for city in cities:
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_feels[city], mode='lines', name=f'{city}-f', visible=False))
+
+
+    fig.update_layout(
+    updatemenus=[go.layout.Updatemenu(
+        active=0,
+        buttons=list(
+            [dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False, False, False, False, False, False] },
+                          {'title': 'Max Temp',
+                           'showlegend':True}]),
+            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True]},
+                          {'title': 'Feels Like',
+                           'showlegend':True}]), 
+            dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True, False, False, False, False, False]},
+                          {'title': 'Humidity',
+                           'showlegend':True, 
+                           'yaxis':{'title':'Percentage', 
+                           'visible': True, 
+                           'showticklabels': True}
+                           }]), 
+          
+            ]),
+        )
+    ])
+    
+  
+ 
+    '''
+    buttons.append(dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False]},
+                          {'title': 'Max Temp',
+                           'showlegend':True}]))
+    
+    buttons.append(dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True]},
+                          {'title': 'Humidity',
+                           'showlegend':True}]))
+  
+    '''
+    '''
+    buttons.append(dict(method='restyle', label='Feels Like', args=[{'y': city_to_feels[cities[0]],
+                               'x':[i for i in range(40)],
+                               'type':'scatter'}, [0]],))
+    
+    '''
+    '''
+    for item in ('Max Temp', 'Humidity', 'Feels Like'):
+        entry = dict(method='restyle', label=item, args=[{'y':[666,777,999],
+                               'x':[1,2, 3],
+                               'type':'scatter'}, [0]],
+                        )
+        buttons.append(entry)
+    '''
+    
+    '''
+    update_menu = []
+    menu = dict()
+    update_menu.append(menu)
+    update_menu[0]['buttons'] = buttons
+    update_menu[0]['direction'] = 'down'
+    update_menu[0]['showactive'] = True
+    update_menu[0]['active'] = 0
+
+    fig.update_layout(showlegend=True, updatemenus=update_menu)
+    '''
+    fig_json = fig.to_json()
+
     # a simple HTML template
     template = """<html>
     <head>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
-        <h1>cookies and cream</h1>
+        <h1>Weather in 5 Major Cities</h1>
         <div id='divPlotly'></div>
         <script>
             var plotly_data = {}
@@ -104,6 +182,7 @@ def make_plot_3():
 
     return template
 
+'''
 def make_plot_2(t_mins,t_maxs, dates):
     # create a simple plot
     fig = go.Figure()
@@ -126,7 +205,7 @@ def make_plot_2(t_mins,t_maxs, dates):
     </head>
     
     <body>
-        <h1>cookies and cream</h1>
+        <h1>Weather in 5 major Cities</h1>
         <div id='divPlotly'></div>
         <script>
             var plotly_data = {}
@@ -150,3 +229,4 @@ def make_plot_2(t_mins,t_maxs, dates):
 # top 5 cities and location 
 # filter 
 # 
+'''
