@@ -15,12 +15,6 @@ app = Flask(__name__)
 def main():
     plot = api.make_plot_cities(['new york', 'london','miami', 'dubai', 'los angeles'])
     return render_template('index.html', plotly_data=plot)
-    #return render_template('new_plot.html')
-
-@app.route("/data")
-def data():
-    response = api.get_forecast_by_city('los angeles')
-    return response
 
 @app.route("/location")
 def location():
