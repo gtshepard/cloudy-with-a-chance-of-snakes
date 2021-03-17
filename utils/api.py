@@ -6,6 +6,8 @@ from collections import defaultdict
 API_KEY = environ.get('API_KEY')
 BASE_URL = f'https://api.openweathermap.org/data/2.5/'
 
+
+
 def get_forecast_by_location(lat, lon):
     location_search_weeks = f'forecast?units=imperial&lat={lat}&lon={lon}&appid={API_KEY}'
     response = requests.get(BASE_URL + location_search_weeks)
@@ -49,6 +51,9 @@ def make_plot_cities(cities):
                         'showticklabels': True}
             })
 
+    fig.data = []
+    
+    
     for city, infor in data.items():
         name = city.lower()
         for item in infor['list']:
@@ -117,6 +122,8 @@ def make_plot_cities(cities):
     fig_json = fig.to_json()
      # a simple HTML template
     return fig_json
+
+
 
     '''
     res = defaultdict(list)

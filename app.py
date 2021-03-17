@@ -32,5 +32,6 @@ def location():
 def graph():
     data = json.loads(request.get_data())
     option, cities = data['option'], list(data['cities'])
+    print(cities)
     graph = api.make_plot_cities(cities)
     return graph
