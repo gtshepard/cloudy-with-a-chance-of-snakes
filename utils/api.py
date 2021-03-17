@@ -6,8 +6,6 @@ from collections import defaultdict
 API_KEY = environ.get('API_KEY')
 BASE_URL = f'https://api.openweathermap.org/data/2.5/'
 
-
-
 def get_forecast_by_location(lat, lon):
     location_search_weeks = f'forecast?units=imperial&lat={lat}&lon={lon}&appid={API_KEY}'
     response = requests.get(BASE_URL + location_search_weeks)
@@ -33,9 +31,6 @@ def get_weather_by_location(city):
 def make_plot_cities(cities):
     data = get_forecast_by_cities(cities)
     dates = []
-    print(cities)
-    #cities = ['new york', 'london','miami', 'dubai', 'los angeles']
-    #data = get_weather_for_cities(cities)
     city_to_temp = defaultdict(list)
     city_to_humidity = defaultdict(list)
     city_to_feels = defaultdict(list)
@@ -72,34 +67,32 @@ def make_plot_cities(cities):
                 fig.add_trace(go.Scatter(x=dates, y=data_map[city.lower()], mode='lines', name=city, visible=False))
             else:
                 fig.add_trace(go.Scatter(x=dates, y=data_map[city.lower()], mode='lines', name=city, visible=True))
-           # print(city.lower())
             
     fig.update_layout(
     updatemenus=[go.layout.Updatemenu(
         active=0,
         buttons=list(
             [dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
-                          {'title': 'Max Temp',
-                           'showlegend':True,
-                           'yaxis':{'title':'Degrees Farenheit', 
-                           'visible': True, 
-                           'showticklabels': True}
-                           }]),
-            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]},
-                          {'title': 'Feels Like',
-                           'showlegend':True,
+                        {'title': 'Max Temp',
+                            'showlegend':True,
                             'yaxis':{'title':'Degrees Farenheit', 
-                           'visible': True, 
-                           'showticklabels': True}
-                           }]), 
+                            'visible': True, 
+                            'showticklabels': True}
+                        }]),
+            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]},
+                        {'title': 'Feels Like',
+                            'showlegend':True,
+                            'yaxis':{'title':'Degrees Farenheit', 
+                            'visible': True, 
+                            'showticklabels': True}
+                        }]), 
             dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
-                          {'title': 'Humidity',
-                           'showlegend':True, 
-                           'yaxis':{'title':'Percentage', 
-                           'visible': True, 
-                           'showticklabels': True}
-                           }]), 
-          
+                        {'title': 'Humidity',
+                            'showlegend':True, 
+                            'yaxis':{'title':'Percentage', 
+                            'visible': True, 
+                            'showticklabels': True}
+                        }]), 
             dict(method='update', label='Pressure', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True, False, False, False, False,False]},
                         {'title': 'Pressure',
                         'showlegend':True, 
@@ -107,8 +100,7 @@ def make_plot_cities(cities):
                         'visible': True, 
                         'showticklabels': True}
                         }]), 
-
-             dict(method='update', label='Min Temp', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True]},
+            dict(method='update', label='Min Temp', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True]},
                         {'title': 'Min Temp',
                         'showlegend':True, 
                         'yaxis':{'title':'Degrees Farenheit', 
@@ -120,11 +112,7 @@ def make_plot_cities(cities):
     ])
     
     fig_json = fig.to_json()
-     # a simple HTML template
     return fig_json
-
-
-
     '''
     res = defaultdict(list)
     mapOption = {'temp_min':'Minimum Temperature', 'temp_max':"Maximum Temperature", 'pressure': "Pressure", 'humidity': "Humidity"}
