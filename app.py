@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
+    '''
     response = get_weather_by_location('42.54149775840134','-75.01959026744706' )
     t_mins = []
     dates = []
@@ -29,9 +30,9 @@ def hello():
         t_mins.append(float(t_min))
         dates.append(date)
         t_maxs.append(float(t_max))
+    '''
         
-    make_plot_3()
-    #make_plot_2(t_mins,t_maxs, dates)
+    make_city_weather_plot()
     return render_template('new_plot.html')
 
 @app.route("/data")
@@ -64,7 +65,7 @@ def get_weather_for_cities(cities):
     return responses
 
 
-def make_plot_3():
+def make_city_weather_plot():
     cities = ['new york', 'london','miami', 'dubai', 'los angeles']
     data = get_weather_for_cities(cities)
     city_to_temp = defaultdict(list)
@@ -124,46 +125,7 @@ def make_plot_3():
         )
     ])
     
-  
- 
-    '''
-    buttons.append(dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False]},
-                          {'title': 'Max Temp',
-                           'showlegend':True}]))
-    
-    buttons.append(dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True]},
-                          {'title': 'Humidity',
-                           'showlegend':True}]))
-  
-    '''
-    '''
-    buttons.append(dict(method='restyle', label='Feels Like', args=[{'y': city_to_feels[cities[0]],
-                               'x':[i for i in range(40)],
-                               'type':'scatter'}, [0]],))
-    
-    '''
-    '''
-    for item in ('Max Temp', 'Humidity', 'Feels Like'):
-        entry = dict(method='restyle', label=item, args=[{'y':[666,777,999],
-                               'x':[1,2, 3],
-                               'type':'scatter'}, [0]],
-                        )
-        buttons.append(entry)
-    '''
-    
-    '''
-    update_menu = []
-    menu = dict()
-    update_menu.append(menu)
-    update_menu[0]['buttons'] = buttons
-    update_menu[0]['direction'] = 'down'
-    update_menu[0]['showactive'] = True
-    update_menu[0]['active'] = 0
-
-    fig.update_layout(showlegend=True, updatemenus=update_menu)
-    '''
     fig_json = fig.to_json()
-
     # a simple HTML template
     template = """<html>
     <head>
@@ -183,52 +145,3 @@ def make_plot_3():
         f.write(template.format(fig_json))
 
     return template
-
-'''
-def make_plot_2(t_mins,t_maxs, dates):
-    # create a simple plot
-    fig = go.Figure()
-    #make_plot_3()
-    fig.add_trace(go.Scatter(x=dates, y=t_mins, mode='lines', name='temp mins'))
-    fig.add_trace(go.Scatter(x=dates, y=t_maxs, mode='lines', name='temp maxes'))
-
-    
-                                
-    #layout = go.Layout()
-    #fig = plotly.graph_objs.Figure([line], layout)
-
-    # convert it to JSON
-    fig_json = fig.to_json()
-
-    # a simple HTML template
-    template = """<html>
-    <head>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    </head>
-    
-    <body>
-        <h1>Weather in 5 major Cities</h1>
-        <div id='divPlotly'></div>
-        <script>
-            var plotly_data = {}
-            Plotly.react('divPlotly', plotly_data.data, plotly_data.layout);
-        </script>
-    </body>
-
-    </html>"""
-
-    # write the JSON to the HTML template
-    with open('templates/new_plot.html', 'w') as f:
-        f.write(template.format(fig_json))
-
-    return template
-    
-# '42.54149775840134', '-75.01959026744706'
-# get base city 
-# what kind of data to filter 
-# what kind of data to not filter 
-# by city? based on city a new set of data is pulled and plot changes 
-# top 5 cities and location 
-# filter 
-# 
-'''
