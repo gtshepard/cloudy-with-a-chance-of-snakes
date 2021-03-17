@@ -42,8 +42,6 @@ def see_data():
     response = get_weather_for_city('los angeles')
     return response
 
-
-
 def get_weather_by_location(lat, lon):
     location_search = f'weather?lat={lat}&lon={lon}&appid={API_KEY}'
     location_search_weeks = f'forecast?&units=imperial&lat={lat}&lon={lon}&appid={API_KEY}'
