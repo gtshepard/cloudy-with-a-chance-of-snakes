@@ -112,6 +112,8 @@ def make_city_weather_plot():
         f.write(template.format(fig_json))
 
     return template
+
+@app.route('/')
 def main():
     plot = api.make_plot_cities(['New York', 'Boston', 'San Francisco'], "temp_min") 
     return render_template('index.html', plotly_data=plot)
