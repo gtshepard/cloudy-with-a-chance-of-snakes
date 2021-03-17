@@ -15,22 +15,7 @@ BASE_URL = f'https://api.openweathermap.org/data/2.5/'
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
-    '''
-    response = get_weather_by_location('42.54149775840134','-75.01959026744706' )
-    t_mins = []
-    dates = []
-    t_maxs = []
-    for item in response['list']:
-        #t_min, t_max, date = response['list'][1]['main']['temp_min'],response['list'][1]['main']['temp_max'], response['list'][1]['dt_txt']
-        t_min = item['main']['temp_min']
-        date = item['dt_txt']
-        t_max = item['main']['temp_max']
-        t_mins.append(float(t_min))
-        dates.append(date)
-        t_maxs.append(float(t_max))
-    '''
-        
+def hello():     
     make_city_weather_plot()
     return render_template('new_plot.html')
 
@@ -40,19 +25,19 @@ def see_data():
     #print(response['list'][0][''])
     response = get_weather_for_city('los angeles')
     return response
-
+'''
 def get_weather_by_location(lat, lon):
     location_search = f'weather?lat={lat}&lon={lon}&appid={API_KEY}'
     location_search_weeks = f'forecast?&units=imperial&lat={lat}&lon={lon}&appid={API_KEY}'
 
     response = requests.get(BASE_URL + location_search_weeks)
     return response.json()
+'''
 
 def get_weather_for_city(city_name):
     by_city = f'forecast?&units=imperial&q={city_name}&appid={API_KEY}'
     response = requests.get(BASE_URL + by_city)
     return response.json()
-
 
 def get_weather_for_cities(cities):
     responses = []
@@ -68,6 +53,8 @@ def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los 
     city_to_temp = defaultdict(list)
     city_to_humidity = defaultdict(list)
     city_to_feels = defaultdict(list)
+    city_to_pressure = defaultdict(list)
+    city_to_min_temp = defaultdict(list)
 
     fig = go.Figure(layout_title_text="Max Temp", 
     layout = {'xaxis': {'title': '5 Day Span', 
@@ -88,7 +75,8 @@ def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los 
             city_to_temp[name].append(time_interval['main']['temp_max'])
             city_to_humidity[name].append(time_interval['main']['humidity'])
             city_to_feels[name].append(time_interval['main']['feels_like'])
-
+            city_to_pressure[name].append(time_interval['main']['pressure'])
+            city_to_min_temp[name].append(time_interval['main']['temp_min'])
 
     for city in cities:
         fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_temp[city], mode='lines', name=city))
@@ -99,18 +87,31 @@ def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los 
     for city in cities:
         fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_feels[city], mode='lines', name=city, visible=False))
 
+    for city in cities:
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_pressure[city], mode='lines', name=city, visible=False))
+
+    for city in cities:
+        fig.add_trace(go.Scatter(x=[i for i in range(120)], y=city_to_min_temp[city], mode='lines', name=city, visible=False))
 
     fig.update_layout(
     updatemenus=[go.layout.Updatemenu(
         active=0,
         buttons=list(
-            [dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False, False, False, False, False, False] },
+            [dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
                           {'title': 'Max Temp',
-                           'showlegend':True}]),
-            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True]},
+                           'showlegend':True,
+                           'yaxis':{'title':'Degrees Farenheit', 
+                           'visible': True, 
+                           'showticklabels': True}
+                           }]),
+            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]},
                           {'title': 'Feels Like',
-                           'showlegend':True}]), 
-            dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True, False, False, False, False, False]},
+                           'showlegend':True,
+                            'yaxis':{'title':'Degrees Farenheit', 
+                           'visible': True, 
+                           'showticklabels': True}
+                           }]), 
+            dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
                           {'title': 'Humidity',
                            'showlegend':True, 
                            'yaxis':{'title':'Percentage', 
@@ -118,6 +119,21 @@ def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los 
                            'showticklabels': True}
                            }]), 
           
+            dict(method='update', label='Pressure', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True, False, False, False, False,False]},
+                        {'title': 'Pressure',
+                        'showlegend':True, 
+                        'yaxis':{'title':'Milibars (mb)', 
+                        'visible': True, 
+                        'showticklabels': True}
+                        }]), 
+
+             dict(method='update', label='Min Temp', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True]},
+                        {'title': 'Min Temp',
+                        'showlegend':True, 
+                        'yaxis':{'title':'Degrees Farenheit', 
+                        'visible': True, 
+                        'showticklabels': True}
+                        }]), 
             ]),
         )
     ])
