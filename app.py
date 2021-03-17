@@ -12,7 +12,6 @@ BASE_URL = f'https://api.openweathermap.org/data/2.5/'
 #g = geocoder.ip('me')
 #print(g.latlng)
 
-
 app = Flask(__name__)
 
 @app.route("/")
@@ -63,8 +62,8 @@ def get_weather_for_cities(cities):
     return responses
 
 
-def make_city_weather_plot():
-    cities = ['new york', 'london','miami', 'dubai', 'los angeles']
+def make_city_weather_plot(cities =['new york', 'london','miami', 'dubai', 'los angeles']):
+    #cities = ['new york', 'london','miami', 'dubai', 'los angeles']
     data = get_weather_for_cities(cities)
     city_to_temp = defaultdict(list)
     city_to_humidity = defaultdict(list)
