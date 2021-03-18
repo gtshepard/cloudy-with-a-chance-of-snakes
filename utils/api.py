@@ -48,7 +48,6 @@ def make_plot_cities(cities):
 
     fig.data = []
     
-    
     for city, infor in data.items():
         name = city.lower()
         for item in infor['list']:
@@ -59,7 +58,6 @@ def make_plot_cities(cities):
             city_to_pressure[name].append(item['main']['pressure'])
             city_to_min_temp[name].append(item['main']['temp_min'])
             dates.append(item['dt_txt'])
-
 
     for i, data_map in enumerate([city_to_temp, city_to_humidity,  city_to_feels, city_to_pressure, city_to_min_temp]):
         for city in cities:
@@ -72,35 +70,35 @@ def make_plot_cities(cities):
     updatemenus=[go.layout.Updatemenu(
         active=0,
         buttons=list(
-            [dict(method='update', label='Max Temp', args = [{'visible': [True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
+            [dict(method='update', label='Max Temp', args = [{'visible': [True]*len(cities) + [False]*len(cities)*4},
                         {'title': 'Max Temp',
                             'showlegend':True,
                             'yaxis':{'title':'Degrees Farenheit', 
                             'visible': True, 
                             'showticklabels': True}
                         }]),
-            dict(method='update', label='Feels Like', args = [{'visible': [False, False, False, False, False,False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False]},
+            dict(method='update', label='Feels Like', args = [{'visible': [False]*len(cities) + [True]*len(cities) + [False]*len(cities)*3},
                         {'title': 'Feels Like',
                             'showlegend':True,
                             'yaxis':{'title':'Degrees Farenheit', 
                             'visible': True, 
                             'showticklabels': True}
                         }]), 
-            dict(method='update', label='Humidity', args = [{'visible': [False, False, False, False, False, True, True, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]},
+            dict(method='update', label='Humidity', args = [{'visible': [False]*len(cities)*2 + [True]*len(cities) + [False]*len(cities)*2},
                         {'title': 'Humidity',
                             'showlegend':True, 
                             'yaxis':{'title':'Percentage', 
                             'visible': True, 
                             'showticklabels': True}
                         }]), 
-            dict(method='update', label='Pressure', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True, False, False, False, False,False]},
+            dict(method='update', label='Pressure', args = [{'visible': [False]*len(cities)*3 + [True]*len(cities) + [False]*len(cities)},
                         {'title': 'Pressure',
                         'showlegend':True, 
                         'yaxis':{'title':'Milibars (mb)', 
                         'visible': True, 
                         'showticklabels': True}
                         }]), 
-            dict(method='update', label='Min Temp', args = [{'visible': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, True, True, True, True]},
+            dict(method='update', label='Min Temp', args = [{'visible': [False]*len(cities)*4 + [True]*len(cities)},
                         {'title': 'Min Temp',
                         'showlegend':True, 
                         'yaxis':{'title':'Degrees Farenheit', 
